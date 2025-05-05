@@ -15,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 메서드 이름으로 쿼리 생성
 //    List<Member> findByNameAndStatus(String name, MemberStatus status);
 
-  // @Query 어노테이션으로 JPAL 직접 작성
+  // @Query 어노테이션으로 JPQL 직접 작성
     @Query("SELECT m FROM Member m WHERE m.name = :name AND m.status = :status")
     List<Member> findByNameAndStatus(@Param("name") String name, @Param("status") MemberStatus status);
 }
