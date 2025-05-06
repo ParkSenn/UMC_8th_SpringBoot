@@ -1,10 +1,14 @@
-package umc8th.spring8th.service;
+package umc8th.spring8th.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import umc8th.spring8th.domain.ProfileImage;
-import umc8th.spring8th.repository.*;
+import umc8th.spring8th.repository.MemberAgreeRepository.MemberAgreeRepository;
+import umc8th.spring8th.repository.MemberMissionRepository.MemberMissionRepository;
+import umc8th.spring8th.repository.MemberPreferRepository.MemberPreferRepository;
+import umc8th.spring8th.repository.MemberRepository.MemberRepository;
+import umc8th.spring8th.repository.ProfileImageRepository.ProfileImageRepository;
+import umc8th.spring8th.repository.ReviewRepository.ReviewRepository;
 
 @Service
 @RequiredArgsConstructor

@@ -37,6 +37,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 40)
     private String specAddress;
 
+    @Column(nullable = false, length = 40)
+    private String phoneNum;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(10)")
     private Gender gender;

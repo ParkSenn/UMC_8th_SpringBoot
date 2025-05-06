@@ -1,16 +1,15 @@
-package umc8th.spring8th.repository;
+package umc8th.spring8th.repository.MemberRepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.enums.MemberStatus;
 
 import java.util.List;
 
-@Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     // 메서드 이름으로 쿼리 생성
 //    List<Member> findByNameAndStatus(String name, MemberStatus status);
