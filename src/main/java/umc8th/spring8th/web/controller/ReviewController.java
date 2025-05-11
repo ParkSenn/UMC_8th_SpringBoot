@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import umc8th.spring8th.apiPayload.ApiResponse;
 import umc8th.spring8th.service.ReviewService.ReviewCommandService;
 import umc8th.spring8th.web.dto.Review.ReviewRequestDTO;
 
@@ -17,8 +18,10 @@ public class ReviewController {
 
     // 후기 작성
     @PostMapping("/reviews")
-    public void createReview(@RequestBody ReviewRequestDTO.NewReviewDTO request) {
+    public ApiResponse<String> createReview(@RequestBody ReviewRequestDTO.NewReviewDTO request) {
 
         reviewCommandService.createReview(request);
+
+        return ApiResponse.onSuccess("리뷰가 성공적으로 등록되었습니다.");
     }
 }

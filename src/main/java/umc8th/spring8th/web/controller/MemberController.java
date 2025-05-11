@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import umc8th.spring8th.apiPayload.ApiResponse;
 import umc8th.spring8th.service.MemberService.MemberQueryService;
 import umc8th.spring8th.web.dto.Member.MemberResponseDTO;
 
@@ -17,8 +18,8 @@ public class MemberController {
 
     // 마이페이지
     @GetMapping("/member/{memberId}/my-page")
-    public MemberResponseDTO.MemberMyPageInfoDTO getMyPageInfo(@PathVariable Long memberId) {
+    public ApiResponse<MemberResponseDTO.MemberMyPageInfoDTO> getMyPageInfo(@PathVariable Long memberId) {
 
-        return memberQueryService.findMyPageInfo(memberId);
+        return ApiResponse.onSuccess(memberQueryService.findMyPageInfo(memberId));
     }
 }
