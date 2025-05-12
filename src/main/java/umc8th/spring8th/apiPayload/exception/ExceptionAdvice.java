@@ -2,6 +2,7 @@ package umc8th.spring8th.apiPayload.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,15 +18,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import umc8th.spring8th.apiPayload.ApiResponse;
 import umc8th.spring8th.apiPayload.code.ErrorReasonDTO;
 import umc8th.spring8th.apiPayload.code.status.ErrorStatus;
+import umc8th.spring8th.service.DiscordAlarmService.DiscordAlarmService;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+
 @Slf4j
 @RestControllerAdvice(annotations = {RestController.class})
+@RequiredArgsConstructor
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
+    private final DiscordAlarmService discordAlarmService;
 
     @ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
@@ -52,9 +57,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternalArgs(e,HttpHeaders.EMPTY,ErrorStatus.valueOf("_BAD_REQUEST"),request,errors);
     }
 
+    // 모든 예외를 잡음
     @ExceptionHandler
     public ResponseEntity<Object> exception(Exception e, WebRequest request) {
         e.printStackTrace();
+
+        discordAlarmService.sendErrorAlert(e, request);
 
         return handleExceptionInternalFalse(e, ErrorStatus._INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY, ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(),request, e.getMessage());
     }

@@ -29,4 +29,9 @@ public class TempRestController {
         tempQueryService.CheckFlag(flag);
         return ApiResponse.onSuccess(TempConverter.toTempExceptionDTO(flag));
     }
+
+    @GetMapping("/test/error")
+    public String triggerError() {
+        throw new RuntimeException("💥 강제로 발생시킨 예외입니다!");
+    }
 }

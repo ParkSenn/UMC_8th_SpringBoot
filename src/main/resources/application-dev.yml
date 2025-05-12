@@ -17,8 +17,11 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
-  profiles:
-    active: local
+  config:
+    activate:
+      on-profile: dev
+
 discord:
   webhook:
-    enabled: false
+    enabled: true
+    url: ${DISCORD_WEBHOOK_URL}
