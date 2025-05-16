@@ -21,11 +21,11 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 
     // 후기 작성
     @Override
-    public void createReview(ReviewRequestDTO.NewReviewDTO request) {
+    public void createReview(ReviewRequestDTO.NewReviewDTO request, Long storeId) {
 
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        Store store = storeRepository.findById(request.getStoreId())
+        Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
 
         Review review = ReviewConverter.toReview(request, member, store);
