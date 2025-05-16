@@ -4,6 +4,9 @@ import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.Review;
 import umc8th.spring8th.domain.Store;
 import umc8th.spring8th.web.dto.Review.ReviewRequestDTO;
+import umc8th.spring8th.web.dto.Review.ReviewResponseDTO;
+
+import java.time.LocalDateTime;
 
 public class ReviewConverter {
 
@@ -15,6 +18,14 @@ public class ReviewConverter {
                 .score(request.getScore())
                 .store(store)
                 .member(member)
+                .build();
+    }
+
+    public static ReviewResponseDTO.CreateReviewResultDTO toCreateReviewResultDTO(Review review) {
+
+        return ReviewResponseDTO.CreateReviewResultDTO.builder()
+                .reviewId(review.getId())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }
