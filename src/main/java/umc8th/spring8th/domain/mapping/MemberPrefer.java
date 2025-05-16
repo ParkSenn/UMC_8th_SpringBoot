@@ -40,6 +40,18 @@ public class MemberPrefer extends BaseEntity {
         return Objects.equals(id, that.id);
     }
 
+    public void setMember(Member member) {
+        if(this.member != null) {
+            member.getMemberPreferList().remove(this);
+        }
+        this.member = member;
+        member.getMemberPreferList().add(this);
+    }
+
+    public void setFoodCategory(FoodCategory foodCategory) {
+        this.foodCategory = foodCategory;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
