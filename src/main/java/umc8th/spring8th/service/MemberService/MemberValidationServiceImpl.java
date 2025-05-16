@@ -8,7 +8,7 @@ import umc8th.spring8th.repository.MemberRepository.MemberRepository;
 @RequiredArgsConstructor
 public class MemberValidationServiceImpl implements MemberValidationService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public boolean isMemberExist(Long memberId) {

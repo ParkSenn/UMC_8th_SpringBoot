@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import umc8th.spring8th.apiPayload.code.status.ErrorStatus;
 import umc8th.spring8th.service.MemberService.MemberValidationService;
 import umc8th.spring8th.validation.annotation.ExistMember;
 
@@ -19,8 +20,15 @@ public class MemberExistValidator implements ConstraintValidator<ExistMember, Lo
     }
 
     @Override
-    public boolean isValid(Long memberId, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Long memberId, ConstraintValidatorContext context) {
 
-        return memberValidationService.isMemberExist(memberId);
+        boolean isValid =  memberValidationService.isMemberExist(memberId);
+
+        if(!isValid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.MEMBER_NOT_FOUND.toString()).addConstraintViolation();
+        }
+
+        return isValid;
     }
 }
