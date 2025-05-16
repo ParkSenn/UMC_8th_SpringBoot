@@ -1,11 +1,9 @@
 package umc8th.spring8th.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc8th.spring8th.apiPayload.ApiResponse;
+import umc8th.spring8th.domain.mapping.MemberMission;
 import umc8th.spring8th.service.MemberMissionService.MemberMissionQueryService;
 import umc8th.spring8th.web.dto.MemberMission.MemberMissionResponseDTO;
 
@@ -17,6 +15,7 @@ import java.util.List;
 public class MemberMissionController {
 
     private final MemberMissionQueryService memberMissionQueryService;
+    private final MemberMissionCommandService memberMissionCommandService;
 
     // 특정 회원의 진행 중인 미션 모아보기
     @GetMapping("/member/{memberId}/challenging-missions")
@@ -28,6 +27,13 @@ public class MemberMissionController {
     @GetMapping("/member/{memberId}/completed-missions")
     public ApiResponse<List<MemberMissionResponseDTO.MemberMissionDTO>> getCompletedMissions(@PathVariable Long memberId) {
         return ApiResponse.onSuccess(memberMissionQueryService.findCompletedMissions(memberId));
+    }
+
+    @PostMapping("/missions/{missionId}/challenge")
+    public ApiResponse<MemberMissionResponseDTO.NewChallengingMemberMission> challengeMission(@PathVariable(name = "missionId") Long missionId) {
+
+        MemberMission memberMission = memberMissionCommandService.challengeMission(missionId);
+        return ApiResponse.onSuccess(MemberMissionConverter.toNewChallengingMemberMission(memberMission));
     }
 
 
