@@ -1,5 +1,6 @@
 package umc8th.spring8th.web.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc8th.spring8th.apiPayload.ApiResponse;
@@ -30,10 +31,11 @@ public class MemberMissionController {
     }
 
     @PostMapping("/missions/{missionId}/challenge")
-    public ApiResponse<MemberMissionResponseDTO.NewChallengingMemberMission> challengeMission(@PathVariable(name = "missionId") Long missionId) {
+    public ApiResponse<MemberMissionResponseDTO.NewChallengingMemberMissionResultDTO> challengeMission(@PathVariable(name = "missionId") Long missionId,
+                                                                                              @RequestBody @Valid MemberMissionRequestDTO.NewChallengingMemberMissionDTO request) {
 
-        MemberMission memberMission = memberMissionCommandService.challengeMission(missionId);
-        return ApiResponse.onSuccess(MemberMissionConverter.toNewChallengingMemberMission(memberMission));
+        MemberMission memberMission = memberMissionCommandService.challengeMission(missionId, request);
+        return ApiResponse.onSuccess(MemberMissionConverter.toNewChallengingMemberMissionResultDTO(memberMission));
     }
 
 
