@@ -2,6 +2,9 @@ package umc8th.spring8th.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc8th.spring8th.apiPayload.code.status.ErrorStatus;
+import umc8th.spring8th.apiPayload.exception.handler.MemberHandler;
+import umc8th.spring8th.apiPayload.exception.handler.StoreHandler;
 import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.Review;
 import umc8th.spring8th.domain.Store;
@@ -24,9 +27,9 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
     public void createReview(ReviewRequestDTO.NewReviewDTO request, Long storeId) {
 
         Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+                .orElseThrow(() -> new StoreHandler(ErrorStatus.STORE_NOT_FOUND));
 
         Review review = ReviewConverter.toReview(request, member, store);
 
