@@ -21,9 +21,9 @@ public class ReviewConverter {
                 .build();
     }
 
-    public static ReviewResponseDTO.CreateReviewResultDTO toCreateReviewResultDTO(Review review) {
+    public static ReviewResponseDTO.NewReviewResultDTO toNewReviewResultDTO(Review review) {
 
-        return ReviewResponseDTO.CreateReviewResultDTO.builder()
+        return ReviewResponseDTO.NewReviewResultDTO.builder()
                 .reviewId(review.getId())
                 .createdAt(LocalDateTime.now())
                 .build();
