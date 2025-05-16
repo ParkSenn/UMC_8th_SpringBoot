@@ -3,6 +3,8 @@ package umc8th.spring8th.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import umc8th.spring8th.domain.common.BaseEntity;
 import umc8th.spring8th.domain.enums.Gender;
 import umc8th.spring8th.domain.enums.MemberStatus;
@@ -13,12 +15,12 @@ import umc8th.spring8th.domain.mapping.MemberPrefer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
+@DynamicUpdate
+@DynamicInsert
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -59,14 +61,14 @@ public class Member extends BaseEntity {
     @ColumnDefault("0")
     private Integer point;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberAgree> memberAgreeList = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    private List<MemberPrefer> memberPreferList = new ArrayList<>();
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MemberPrefer> memberPreferList = new HashSet<>();
+    private List<MemberPrefer> memberPreferList = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<MemberPrefer> memberPreferList = new HashSet<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
