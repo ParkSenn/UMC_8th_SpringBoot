@@ -19,7 +19,6 @@ public class MemberMissionCommandServiceImpl implements MemberMissionCommandServ
     private final MemberMissionRepository memberMissionRepository;
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
-    p
 
     @Override
     @Transactional
