@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import umc8th.spring8th.apiPayload.ApiResponse;
 import umc8th.spring8th.domain.mapping.MemberMission;
 import umc8th.spring8th.service.MemberMissionService.MemberMissionQueryService;
+import umc8th.spring8th.web.dto.MemberMission.MemberMissionRequestDTO;
 import umc8th.spring8th.web.dto.MemberMission.MemberMissionResponseDTO;
 
 import java.util.List;
@@ -30,11 +31,10 @@ public class MemberMissionController {
         return ApiResponse.onSuccess(memberMissionQueryService.findCompletedMissions(memberId));
     }
 
-    @PostMapping("/missions/{missionId}/challenge")
-    public ApiResponse<MemberMissionResponseDTO.NewChallengingMemberMissionResultDTO> challengeMission(@PathVariable(name = "missionId") Long missionId,
-                                                                                              @RequestBody @Valid MemberMissionRequestDTO.NewChallengingMemberMissionDTO request) {
+    @PostMapping("/missions/challenge")
+    public ApiResponse<MemberMissionResponseDTO.NewChallengingMemberMissionResultDTO> challengeMission(@RequestBody @Valid MemberMissionRequestDTO.NewChallengingMemberMissionDTO request) {
 
-        MemberMission memberMission = memberMissionCommandService.challengeMission(missionId, request);
+        MemberMission memberMission = memberMissionCommandService.challengeMission(request);
         return ApiResponse.onSuccess(MemberMissionConverter.toNewChallengingMemberMissionResultDTO(memberMission));
     }
 
