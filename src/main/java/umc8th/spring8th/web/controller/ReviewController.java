@@ -22,11 +22,11 @@ public class ReviewController {
 
     // 후기 작성
     @PostMapping("/stores/{storeId}/reviews")
-    public ApiResponse<ReviewResponseDTO.CreateReviewResultDTO> createReview(@RequestBody @Valid ReviewRequestDTO.NewReviewDTO request,
-                                                       @PathVariable(name = "storeId") @ExistStore Long storeId) {
+    public ApiResponse<ReviewResponseDTO.NewReviewResultDTO> createReview(@RequestBody @Valid ReviewRequestDTO.NewReviewDTO request,
+                                                                          @PathVariable(name = "storeId") @ExistStore Long storeId) {
 
         Review review = reviewCommandService.createReview(request, storeId);
 
-        return ApiResponse.onSuccess(ReviewConverter.toCreateReviewResultDTO(review));
+        return ApiResponse.onSuccess(ReviewConverter.toNewReviewResultDTO(review));
     }
 }

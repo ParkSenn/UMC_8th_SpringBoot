@@ -13,7 +13,7 @@ public class ReviewResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateReviewResultDTO{
+    public static class NewReviewResultDTO {
         Long reviewId;
         LocalDateTime createdAt;
     }
