@@ -4,5 +4,5 @@ import umc8th.spring8th.web.dto.MemberMission.MemberMissionRequestDTO;
 
 public interface MemberMissionValidationService {
 
-    boolean isChallengingMemberMissionExist(MemberMissionRequestDTO.NewChallengingMemberMissionDTO request);
+    boolean alreadyChallengingMission(MemberMissionRequestDTO.NewChallengingMemberMissionDTO request);
 }

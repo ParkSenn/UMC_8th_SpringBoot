@@ -23,11 +23,11 @@ public class ChallengingMemberMissionExistValidator implements ConstraintValidat
     @Override
     public boolean isValid(MemberMissionRequestDTO.NewChallengingMemberMissionDTO dto, ConstraintValidatorContext context) {
 
-        boolean isValid = memberMissionValidationService.isChallengingMemberMissionExist(dto);
+        boolean isValid =!(memberMissionValidationService.alreadyChallengingMission(dto));
 
         if(!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.CHALLENGING_MEMBER_MISSION_ALREADY_EXIST.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus.CHALLENGING_MEMBER_MISSION_ALREADY_EXIST.getMessage()).addConstraintViolation();
         }
 
         return isValid;

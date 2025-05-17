@@ -13,7 +13,7 @@ public class MemberMissionValidationServiceImpl implements MemberMissionValidati
     private final MemberMissionRepository memberMissionRepository;
 
     @Override
-    public boolean isChallengingMemberMissionExist(MemberMissionRequestDTO.NewChallengingMemberMissionDTO request) {
+    public boolean alreadyChallengingMission(MemberMissionRequestDTO.NewChallengingMemberMissionDTO request) {
 
         return memberMissionRepository.existsByMemberIdAndMissionIdAndStatus(request.getMemberId(), request.getMissionId(), MissionStatus.CHALLENGING);
     }
