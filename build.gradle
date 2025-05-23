@@ -60,6 +60,9 @@ dependencies {
 	// Validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// DoubleMath
+	implementation 'com.google.guava:guava:31.1-jre'
+
 }
 
 dependencyManagement {
