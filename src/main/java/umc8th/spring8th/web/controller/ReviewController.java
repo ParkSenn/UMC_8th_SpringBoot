@@ -17,6 +17,7 @@ import umc8th.spring8th.domain.Review;
 import umc8th.spring8th.service.ReviewService.ReviewCommandService;
 import umc8th.spring8th.service.ReviewService.ReviewQueryService;
 import umc8th.spring8th.validation.annotation.ExistStore;
+import umc8th.spring8th.validation.annotation.ValidPageNum;
 import umc8th.spring8th.web.dto.Review.ReviewRequestDTO;
 import umc8th.spring8th.web.dto.Review.ReviewResponseDTO;
 
@@ -49,10 +50,11 @@ public class ReviewController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "AUTH006", description = "acess 토큰 모양이 이상함",content = @Content(schema = @Schema(implementation = ApiResponse.class))),
     })
     @Parameters({
-            @Parameter(name = "storeId", description = "가게의 아이디, path variable 입니다!")
+            @Parameter(name = "storeId", description = "가게의 아이디, path variable 입니다!"),
+            @Parameter(name = "page", description = "페이징을 위한 페이지 번호, 1 이상의 정수, queryString 입니다!")
     })
     public ApiResponse<ReviewResponseDTO.ReviewPreViewListDTO> getReviewList(@ExistStore @PathVariable(name = "storeId") Long storeId,
-                                                                             @RequestParam(name = "page") Integer page) {
+                                                                             @ValidPageNum @RequestParam(name = "page") Integer page) {
         Page<Review> reviewList = reviewQueryService.getReviewList(storeId, page);
 
         return ApiResponse.onSuccess(ReviewConverter.toReviewPreViewListDTO(reviewList));
