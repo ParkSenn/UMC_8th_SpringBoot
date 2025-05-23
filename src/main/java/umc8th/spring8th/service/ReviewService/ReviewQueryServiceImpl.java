@@ -21,7 +21,7 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 
         Store store = storeRepository.findById(storeId).get();
 
-        Page<Review> storePage = reviewRepository.findAllByStore(store, PageRequest.of(page, 10));
+        Page<Review> storePage = reviewRepository.findAllByStore(store, PageRequest.of(page - 1, 10));
 
         return storePage;
     }

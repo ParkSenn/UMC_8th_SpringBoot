@@ -3,6 +3,9 @@ package umc8th.spring8th.repository.MemberMissionRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import umc8th.spring8th.domain.QMember;
 import umc8th.spring8th.domain.QMission;
@@ -25,7 +28,7 @@ public class MemberMissionRepositoryImpl implements MemberMissionRepositoryCusto
 
     // 특정 회원의 진행 중인 미션 모아보기
     @Override
-    public List<MemberMissionResponseDTO.MemberMissionDTO> findChallengingMissions(Long memberId) {
+    public Page<MemberMissionResponseDTO.MemberMissionDTO> findChallengingMissions(Long memberId, Pageable pageable) {
 
         List<MemberMissionResponseDTO.MemberMissionDTO> result = jpaQueryFactory
                 .select(Projections.constructor(
@@ -44,9 +47,21 @@ public class MemberMissionRepositoryImpl implements MemberMissionRepositoryCusto
                         member.id.eq(memberId),
                         memberMission.status.eq(MissionStatus.CHALLENGING)
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        return result;
+        // 전체 개수 구하기
+        long total = jpaQueryFactory
+                .select(memberMission.count())
+                .from(memberMission)
+                .where(
+                        memberMission.member.id.eq(memberId),
+                        memberMission.status.eq(MissionStatus.CHALLENGING)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, total);
     }
 
     // 특정 회원의 진행 완료한 미션 모아보기

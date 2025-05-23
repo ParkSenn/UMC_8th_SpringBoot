@@ -1,5 +1,6 @@
 package umc8th.spring8th.converter;
 
+import org.springframework.data.domain.Page;
 import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.Mission;
 import umc8th.spring8th.domain.enums.MissionStatus;
@@ -26,4 +27,17 @@ public class MemberMissionConverter {
                 .status(MissionStatus.CHALLENGING)
                 .build();
     }
+
+    public static MemberMissionResponseDTO.MemberMissionListDTO toMemberMissionListDTO(Page<MemberMissionResponseDTO.MemberMissionDTO> pageResult) {
+
+        return MemberMissionResponseDTO.MemberMissionListDTO.builder()
+                .memberMissionDTOList(pageResult.getContent())
+                .listSize(pageResult.getNumberOfElements())
+                .totalPage(pageResult.getTotalPages())
+                .totalElements(pageResult.getTotalElements())
+                .isFirst(pageResult.isFirst())
+                .isLast(pageResult.isLast())
+                .build();
+    }
+
 }
