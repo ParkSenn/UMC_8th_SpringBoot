@@ -1,9 +1,14 @@
 package umc8th.spring8th.service.MissionService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc8th.spring8th.domain.Mission;
+import umc8th.spring8th.domain.Store;
 import umc8th.spring8th.repository.MissionRepository.MissionRepository;
+import umc8th.spring8th.repository.StoreRepository.StoreRepository;
 import umc8th.spring8th.web.dto.Mission.MissionResponseDTO;
 
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.List;
 public class MissionQueryServiceImpl implements MissionQueryService {
 
     private final MissionRepository missionRepository;
+    private final StoreRepository storeRepository;
 
     // 홈 화면 - 특정 지역의 회원의 도전 가능한 미션 모아보기
     @Override
@@ -22,5 +28,15 @@ public class MissionQueryServiceImpl implements MissionQueryService {
         List<MissionResponseDTO.RegionMissionDTO> memberMissionDTOS = missionRepository.findAvailableMissions(memberId, regionName);
 
         return memberMissionDTOS;
+    }
+
+    @Override
+    public Page<Mission> findStoreMissions(Long storeId, Integer page, Integer size) {
+
+        Store store = storeRepository.getReferenceById(storeId);
+
+        Page<Mission> missionPage = missionRepository.findAllByStore(store, PageRequest.of(page - 1, size));
+
+        return missionPage;
     }
 }
