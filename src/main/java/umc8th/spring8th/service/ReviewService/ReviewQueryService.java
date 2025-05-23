@@ -6,4 +6,6 @@ import umc8th.spring8th.domain.Review;
 public interface ReviewQueryService {
 
     Page<Review> getReviewList(Long storeId, Integer page);
+
+    Page<Review> getMemberReviewList(Long memberId, Integer page, Integer size);
 }
