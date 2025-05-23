@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.Review;
 import umc8th.spring8th.domain.Store;
 
@@ -16,4 +17,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     void deleteByMemberId(@Param("memberId") Long memberId);
 
     Page<Review> findAllByStore(Store store, PageRequest pageRequest);
+
+    Page<Review> findAllByMember(Member member, PageRequest pageRequest);
 }
