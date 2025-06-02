@@ -7,6 +7,7 @@ import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.enums.MemberStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
@@ -17,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
   // @Query 어노테이션으로 JPQL 직접 작성
     @Query("SELECT m FROM Member m WHERE m.name = :name AND m.status = :status")
     List<Member> findByNameAndStatus(@Param("name") String name, @Param("status") MemberStatus status);
+
+    Optional<Member> findByEmail(String email);
 }

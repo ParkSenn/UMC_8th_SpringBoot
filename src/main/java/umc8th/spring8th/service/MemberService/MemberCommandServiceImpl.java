@@ -1,6 +1,7 @@
 package umc8th.spring8th.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc8th.spring8th.converter.MemberConverter;
@@ -22,11 +23,15 @@ public class MemberCommandServiceImpl implements  MemberCommandService{
 
     private final FoodCategoryRepository foodCategoryRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public Member joinMember(MemberRequestDTO.JoinDto request) {
 
         Member newMember = MemberConverter.toMember(request);
+
+        newMember.encodePassword(passwordEncoder.encode(request.getPassword()));
 
 //        List<FoodCategory> foodCategoryList = request.getPreferCategory().stream()
 //                .map(category -> {

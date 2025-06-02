@@ -36,10 +36,12 @@ public class MemberConverter {
         return Member.builder()
                 .address(request.getAddress())
                 .email(request.getEmail())
+                .password(request.getPassword())
                 .phoneNum(request.getPhoneNum())
-                .specAddress(request.getAddress())
+                .specAddress(request.getSpecAddress())
                 .gender(gender)
                 .name(request.getName())
+                .role(request.getRole())
                 .memberPreferList(new ArrayList<>())
                 .build();
     }
