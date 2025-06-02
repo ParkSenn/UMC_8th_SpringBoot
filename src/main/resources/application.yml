@@ -27,3 +27,4 @@ jwt:
     secretKey: umceightfightingjwttokenauthentication
     expiration:
       access: 14400000
+      refresh: 1209600000
