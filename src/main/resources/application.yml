@@ -22,3 +22,8 @@ spring:
 discord:
   webhook:
     enabled: false
+jwt:
+  token:
+    secretKey: umceightfightingjwttokenauthentication
+    expiration:
+      access: 14400000
