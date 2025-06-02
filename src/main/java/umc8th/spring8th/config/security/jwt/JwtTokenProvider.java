@@ -33,13 +33,38 @@ public class JwtTokenProvider {
 
     // 인증 정보를 받아서, JWT Access Token을 생성하고 반환
     public String generateToken(Authentication authentication) {
-        String email = authentication.getName();;
+        String email = authentication.getName();
+
+        return Jwts.builder()
+                // 페이로드의 sub 클레임 설정
+                // 토큰의 주체를 나타내며 일반적으로 사용자 식별자(이메일, 아이디) 저장
+                // 사용자를 고유하게 식별할 수 있는 값
+                .setSubject(email)
+                // 사용자 정의(custom) 클레임 추가
+                // "role"은 클레임 이름
+                // 사용자의 권한 (ex. ROLE_USER)를 가져옴
+                .claim("role", authentication.getAuthorities().iterator().next().getAuthority())
+                // 토큰이 발행된 시간 설정 (현재 시간)
+                .setIssuedAt(new Date())
+                // 토큰의 만료 시간을 지정
+                // 현재 시간에 만료 시간을 더함
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration().getAccess()))
+                // 서명을 생성
+                // 비밀키를 가져와 알고리즘을 사용해 서명
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                // 설정된 내용을 바탕으로 최종 JWT 문자열을 생성
+                .compact();
+    }
+
+    // Refresh Token 생성하고 반환
+    public String generateRefreshToken(Authentication authentication) {
+        String email = authentication.getName();
 
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", authentication.getAuthorities().iterator().next().getAuthority())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration().getAccess()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration().getRefresh()))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
