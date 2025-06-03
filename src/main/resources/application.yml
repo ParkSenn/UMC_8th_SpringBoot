@@ -19,6 +19,11 @@ spring:
         default_batch_fetch_size: 1000
   profiles:
     active: local
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 discord:
   webhook:
     enabled: false
@@ -27,3 +32,4 @@ jwt:
     secretKey: umceightfightingjwttokenauthentication
     expiration:
       access: 14400000
+      refresh: 1209600000
