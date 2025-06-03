@@ -16,6 +16,12 @@ import umc8th.spring8th.apiPayload.code.status.ErrorStatus;
 import umc8th.spring8th.apiPayload.exception.handler.MemberHandler;
 import umc8th.spring8th.config.properties.Constants;
 import umc8th.spring8th.config.properties.JwtProperties;
+import umc8th.spring8th.converter.MemberConverter;
+import umc8th.spring8th.domain.Member;
+import umc8th.spring8th.domain.RefreshToken;
+import umc8th.spring8th.repository.MemberRepository.MemberRepository;
+import umc8th.spring8th.repository.RefreshTokenRepository.RefreshTokenRepository;
+import umc8th.spring8th.web.dto.Member.MemberResponseDTO;
 
 import java.security.Key;
 import java.util.Collections;
@@ -26,6 +32,8 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final MemberRepository memberRepository;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
@@ -86,11 +94,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰에서 인증 정보를 추출해서, Spring Security의 Authentication 객체로 변환
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = getClaims(token);
 
         String email = claims.getSubject();
         String role = claims.get("role", String.class);
@@ -116,5 +120,61 @@ public class JwtTokenProvider {
             throw new MemberHandler(ErrorStatus.INVALID_TOKEN);
         }
         return getAuthentication(accessToken);
+    }
+
+    // RefreshToken 유효성 확인
+    public void validateRefreshToken(String refreshToken) {
+        // 레디스에 값이 있는지 확인
+        boolean exists = refreshTokenRepository.existsById(refreshToken);
+
+        if(!exists) {
+            throw new MemberHandler(ErrorStatus.INVALID_TOKEN);
+        }
+    }
+
+    // 토큰의 클레임 가져오기
+    public Claims getClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw new MemberHandler(ErrorStatus.INVALID_TOKEN);
+        }
+    }
+
+    // 토큰 재발급
+    public MemberResponseDTO.LoginResultDTO reissueToken(String refreshToken) {
+
+        RefreshToken refreshTokenEntity = refreshTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.INVALID_TOKEN));
+
+        Member member = memberRepository.findById(refreshTokenEntity.getUserId())
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 새로운 인증 객체 Authentication 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                member.getEmail(),
+                null,
+                Collections.singleton(() -> member.getRole().name())
+        );
+
+        // 새로운 AccessToken, RefreshToken 생성
+        String newAccessToken = generateToken(authentication);
+        String newRefreshToken = generateRefreshToken(authentication);
+
+        // 기존 RefreshToken 삭제
+        refreshTokenRepository.delete(refreshTokenEntity);
+        // 새로운 RefreshToken 생성 및 저장
+        RefreshToken newRefreshTokenEntity = new RefreshToken(newRefreshToken, member.getId());
+        refreshTokenRepository.save(newRefreshTokenEntity);
+
+        return MemberConverter.toLoginResultDTO(
+                member.getId(),
+                newAccessToken,
+                newRefreshToken
+        );
     }
 }
