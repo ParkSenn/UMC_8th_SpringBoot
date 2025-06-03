@@ -13,9 +13,11 @@ import umc8th.spring8th.converter.MemberConverter;
 import umc8th.spring8th.converter.MemberPreferConverter;
 import umc8th.spring8th.domain.FoodCategory;
 import umc8th.spring8th.domain.Member;
+import umc8th.spring8th.domain.RefreshToken;
 import umc8th.spring8th.domain.mapping.MemberPrefer;
 import umc8th.spring8th.repository.FoodCategoryRepository.FoodCategoryRepository;
 import umc8th.spring8th.repository.MemberRepository.MemberRepository;
+import umc8th.spring8th.repository.RefreshTokenRepository.RefreshTokenRepository;
 import umc8th.spring8th.web.dto.Member.MemberRequestDTO;
 import umc8th.spring8th.web.dto.Member.MemberResponseDTO;
 
@@ -33,6 +35,8 @@ public class MemberCommandServiceImpl implements  MemberCommandService{
     private final PasswordEncoder passwordEncoder;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     @Transactional
@@ -75,10 +79,16 @@ public class MemberCommandServiceImpl implements  MemberCommandService{
         );
 
         String accessToken = jwtTokenProvider.generateToken(authentication);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+
+        // Redis에 RefreshToken 저장
+        RefreshToken refreshTokenEntity = new RefreshToken(refreshToken, member.getId());
+        refreshTokenRepository.save(refreshTokenEntity);
 
         return MemberConverter.toLoginResultDTO(
                 member.getId(),
-                accessToken
+                accessToken,
+                refreshToken
         );
     }
 }
