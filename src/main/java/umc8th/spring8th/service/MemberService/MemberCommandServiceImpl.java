@@ -1,9 +1,14 @@
 package umc8th.spring8th.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc8th.spring8th.apiPayload.code.status.ErrorStatus;
+import umc8th.spring8th.apiPayload.exception.handler.MemberHandler;
+import umc8th.spring8th.config.security.jwt.JwtTokenProvider;
 import umc8th.spring8th.converter.MemberConverter;
 import umc8th.spring8th.converter.MemberPreferConverter;
 import umc8th.spring8th.domain.FoodCategory;
@@ -12,7 +17,9 @@ import umc8th.spring8th.domain.mapping.MemberPrefer;
 import umc8th.spring8th.repository.FoodCategoryRepository.FoodCategoryRepository;
 import umc8th.spring8th.repository.MemberRepository.MemberRepository;
 import umc8th.spring8th.web.dto.Member.MemberRequestDTO;
+import umc8th.spring8th.web.dto.Member.MemberResponseDTO;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,6 +31,8 @@ public class MemberCommandServiceImpl implements  MemberCommandService{
     private final FoodCategoryRepository foodCategoryRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     @Transactional
@@ -49,5 +58,27 @@ public class MemberCommandServiceImpl implements  MemberCommandService{
         memberPreferList.forEach(memberPrefer -> {memberPrefer.setMember(newMember);});
 
         return memberRepository.save(newMember);
+    }
+
+    @Override
+    public MemberResponseDTO.LoginResultDTO loginMember(MemberRequestDTO.LoginRequestDTO request) {
+        Member member = memberRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+            throw new MemberHandler(ErrorStatus.INVALID_PASSWORD);
+        }
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                member.getEmail(), null,
+                Collections.singleton(() -> member.getRole().name())
+        );
+
+        String accessToken = jwtTokenProvider.generateToken(authentication);
+
+        return MemberConverter.toLoginResultDTO(
+                member.getId(),
+                accessToken
+        );
     }
 }
