@@ -23,6 +23,7 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "MEMBER4003", "유효하지 않은 토큰입니다."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "MEMBER4004", "패스워드가 불일치합니다."),
     DUPLICATE_JOIN_REQUEST(HttpStatus.BAD_REQUEST, "MEMBER4005", "해당 이메일로 이미 가입된 사용자가 존재합니다."),
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "MEMBER4006", "만료된 토큰입니다."),
 
     // 선호 음식 관련 에러
     FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "FOOD_CATEGORY4001", "해당되는 선호 음식이 없습니다"),
