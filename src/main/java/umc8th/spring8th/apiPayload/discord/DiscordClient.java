@@ -10,7 +10,7 @@ import umc8th.spring8th.web.dto.Discord.DiscordMessage;
 
 @FeignClient(
         name = "discord-client",
-        url = "${DISCORD_WEBHOOK_URL}",
+        url = "https://discord.com/api/webhooks/1371204404321058927/vTKLLP6FNyFOFRluBUXCvD7JK6xZjKXrWUXyLb_OjxmI0Cizd8TO6kR-fKiFz1AFTvW9",
         configuration = DiscordFeignConfiguration.class)
 public interface DiscordClient {
 
