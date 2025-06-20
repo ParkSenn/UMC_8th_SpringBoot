@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/umc8th
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: root
+    password: Sen0521@
   sql:
     init:
       mode: never
@@ -24,4 +24,4 @@ spring:
 discord:
   webhook:
     enabled: true
-    url: ${DISCORD_WEBHOOK_URL}
+    url: https://discord.com/api/webhooks/1371204404321058927/vTKLLP6FNyFOFRluBUXCvD7JK6xZjKXrWUXyLb_OjxmI0Cizd8TO6kR-fKiFz1AFTvW9
