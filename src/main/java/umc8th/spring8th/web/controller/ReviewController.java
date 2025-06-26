@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import umc8th.spring8th.apiPayload.ApiResponse;
 import umc8th.spring8th.converter.ReviewConverter;
 import umc8th.spring8th.domain.Review;
@@ -22,6 +24,8 @@ import umc8th.spring8th.validation.annotation.ValidPageNum;
 import umc8th.spring8th.web.dto.Review.ReviewRequestDTO;
 import umc8th.spring8th.web.dto.Review.ReviewResponseDTO;
 
+import java.awt.*;
+
 @RestController
 @Validated
 @RequestMapping("/api")
@@ -32,11 +36,12 @@ public class ReviewController {
     private final ReviewQueryService reviewQueryService;
 
     // 후기 작성
-    @PostMapping("/stores/{storeId}/reviews")
-    public ApiResponse<ReviewResponseDTO.NewReviewResultDTO> createReview(@RequestBody @Valid ReviewRequestDTO.NewReviewDTO request,
-                                                                          @PathVariable(name = "storeId") @ExistStore Long storeId) {
+    @PostMapping(value = "/stores/{storeId}/reviews", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<ReviewResponseDTO.NewReviewResultDTO> createReview(@Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) @RequestPart("request") @Valid ReviewRequestDTO.NewReviewDTO request,
+                                                                          @PathVariable(name = "storeId") @ExistStore Long storeId,
+                                                                          @RequestPart("reviewPicture") MultipartFile reviewPicture) {
 
-        Review review = reviewCommandService.createReview(request, storeId);
+        Review review = reviewCommandService.createReview(request, storeId, reviewPicture);
 
         return ApiResponse.onSuccess(ReviewConverter.toNewReviewResultDTO(review));
     }

@@ -3,6 +3,7 @@ package umc8th.spring8th.converter;
 import org.springframework.data.domain.Page;
 import umc8th.spring8th.domain.Member;
 import umc8th.spring8th.domain.Review;
+import umc8th.spring8th.domain.ReviewImage;
 import umc8th.spring8th.domain.Store;
 import umc8th.spring8th.web.dto.Review.ReviewRequestDTO;
 import umc8th.spring8th.web.dto.Review.ReviewResponseDTO;
@@ -53,6 +54,14 @@ public class ReviewConverter {
                 .totalElements(reviewList.getTotalElements())
                 .listSize(reviewPreViewDTOList.size())
                 .reviewList(reviewPreViewDTOList)
+                .build();
+    }
+
+    public static ReviewImage toReviewImage(String pictureUrl, Review review) {
+
+        return ReviewImage.builder()
+                .imageUrl(pictureUrl)
+                .review(review)
                 .build();
     }
 }
